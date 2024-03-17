@@ -9,10 +9,9 @@ export const createUser = async (
 	res: Response,
 	next: NextFunction
 ) => {
-	// Check if req.body is present
 	if (!req.body) {
 		const error = new Error('Request body is missing');
-		return next(error); // Pass the error to the next middleware
+		return next(error);
 	}
 
 	try {
@@ -27,17 +26,6 @@ export const createUser = async (
 		res.status(201).json(newUser);
 	} catch (error) {
 		console.error(error);
-		next(error); // Pass the error to the next middleware
+		next(error);
 	}
-};
-
-// Custom error handling middleware
-export const errorHandler = (
-	err: Error,
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	console.error(err);
-	res.status(500).send({ errors: [{ message: err.message }] });
 };
