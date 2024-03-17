@@ -1,6 +1,6 @@
 import router from './routes/index.ts';
 import express from 'express';
-import cors from 'cors';
+import cors from './middleware/cors.ts';
 import { errorHandler } from './controllers/createUser.ts';
 import { logger } from './middleware/logger.ts';
 
@@ -12,7 +12,7 @@ const app = express();
 // };
 
 // app.use(cors(corsOptions));
-app.use(cors());
+app.use(cors);
 app.use(router);
 app.use(logger);
 app.use(errorHandler);

@@ -1,1 +1,48 @@
 Middleware functions are used to perform operations on the request and response objects before they reach the route handlers or controllers. Middleware can be used for various purposes, such as logging, error handling, authentication, and data transformation. Middleware functions can be applied globally to all routes or specifically to certain routes. They are crucial for tasks that need to be performed on every request, such as checking if a user is authenticated or logging request details
+
+---------------------------------------------
+Auth Middleware
+const auth = (req, res, next) => {
+ if (!req.user) {
+    return res.status(401).send('Unauthorized');
+ }
+ next();
+};
+
+module.exports = auth;
+
+--------------------------------------------
+Body parsing Middleware
+
+// middleware/bodyParser.js
+const bodyParser = require('body-parser');
+
+module.exports = bodyParser.json();
+--------------------------------------------
+
+cors middleware
+// middleware/cors.js
+const cors = require('cors');
+
+module.exports = cors();
+
+--------------------------------------------
+
+Rate Limiting middleware
+// middleware/rateLimiter.js
+const rateLimit = require('express-rate-limit');
+
+const limiter = rateLimit({
+ windowMs: 15 * 60 * 1000, // 15 minutes
+ max: 100 // limit each IP to 100 requests per windowMs
+});
+
+module.exports = limiter;
+-----------------------------------------------
+
+Compression middleware ? (research this)
+Compression middleware reduces the size of the response body, which can improve the performance of your application, especially for users with slower internet connections.
+// middleware/compression.js
+const compression = require('compression');
+
+module.exports = compression();
