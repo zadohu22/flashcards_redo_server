@@ -1,32 +1,27 @@
-// userController.js
-// import prisma from '../db.js';
 import prisma from '../db.js';
-// import asyncHandler from 'express-async-handler';
+import bcrypt from 'bcryptjs';
 
-// Define the createUser action
+const saltRounds = 10;
 
 export const createUser = async (req, res) => {
-	console.log(req.body);
-	const newUser = await prisma.user.create({
-		data: {
-			email: req.body.email,
-			password: req.body.password,
-			confirmPassword: req.body.confirmPassword,
-		},
-	});
-	console.log('New user created:', newUser);
-	res.status(201).json(newUser);
-};
+	try {
+		// Hash the password using bcrypt
+		const hash = await bcrypt.hash(req.body.password, saltRounds);
 
-// export const createUser = asyncHandler(async (req, res) => {
-// 	console.log(req.body);
-// 	const newUser = await prisma.user.create({
-// 		data: {
-// 			email: req.body.email,
-// 			password: req.body.password,
-// 			confirmPassword: req.body.confirmPassword,
-// 		},
-// 	});
-// 	console.log('New user created:', newUser);
-// 	res.status(201).json(newUser); // Send the new user back as a response
-// });
+		// Create a new user with the hashed password
+		const newUser = await prisma.user.create({
+			data: {
+				email: req.body.email,
+				password: hash,
+			},
+		});
+
+		console.log('New user created:', newUser);
+		res.status(201).json(newUser);
+	} catch (error) {
+		console.error(error);
+		res
+			.status(500)
+			.json({ error: 'An error occurred while creating the user.' });
+	}
+};
