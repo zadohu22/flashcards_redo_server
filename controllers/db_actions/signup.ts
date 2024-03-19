@@ -9,17 +9,22 @@ export const createUser = async (
 	res: Response,
 	next: NextFunction
 ) => {
+	const { email, password, confirmPassword } = req.body;
+
 	if (!req.body) {
 		const error = new Error('Request body is missing');
 		return next(error);
 	}
 
-	try {
-		const hash = await bcrypt.hash(req.body.password, saltRounds);
+	if (password !== confirmPassword) {
+		return res.status(400).json({ error: 'Passwords do not match' });
+	}
 
-		// query the database to check if the email already exists
+	try {
+		const hash = await bcrypt.hash(password, saltRounds);
+
 		const existingUser = await prisma.user.findUnique({
-			where: { email: req.body.email },
+			where: { email: email },
 		});
 		if (existingUser) {
 			return res.status(400).json({ error: 'Email already exists' });
@@ -27,7 +32,7 @@ export const createUser = async (
 
 		const newUser = await prisma.user.create({
 			data: {
-				email: req.body.email,
+				email: email,
 				password: hash,
 			},
 		});
