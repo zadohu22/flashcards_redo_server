@@ -4,7 +4,7 @@ import prisma from '../../db.ts';
 
 const saltRounds = 10;
 
-export const createUser = async (
+export const signup = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
