@@ -11,7 +11,7 @@ const logger = (req: Request, res: Response, next: NextFunction) => {
 		const time = new Intl.DateTimeFormat('en-US', timeOptions).format(
 			new Date()
 		);
-		console.log(`${req.method} ${req.url} - ${time}`);
+		console.log(`Method: ${req.method} | Url: ${req.url} | Time: ${time}`);
 		next();
 	} catch (error) {
 		console.error(error);
